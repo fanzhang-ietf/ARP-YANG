@@ -11,7 +11,7 @@
 <rfc
   xmlns:xi="http://www.w3.org/2001/XInclude"
   category="std"
-  docName="draft-ietf-intarea-arp-yang-model-01"
+  docName="draft-ietf-intarea-arp-yang-model-02"
   ipr="trust200902"
   obsoletes=""
   updates=""
@@ -315,7 +315,7 @@ module: ietf-arp-extension
           Interface Management</xref>, and <xref target="RFC8344">A YANG Data
           Model for IP Management</xref>.</t>
 
-      <sourcecode name="ietf-arp-extension@2026-04-07.yang" type="yang" markers="true">
+      <sourcecode name="ietf-arp-extension@2026-10-30.yang" type="yang" markers="true">
 <![CDATA[
 module ietf-arp-extension {
   yang-version 1.1;
@@ -339,10 +339,11 @@ module ietf-arp-extension {
   }
 
   organization
-    "IETF Internet Area Working Group (intarea)";
+    "IETF INTAREA (Internet Area) Working Group";
+
   contact
     "WG Web:  <https://datatracker.ietf.org/wg/intarea/>
-     WG List: <mailto:int-area@ietf.org>
+     WG List: INTAREA <mailto:int-area@ietf.org>
 
      Author:  Feng Zheng
               <habby.zheng@huawei.com>
@@ -356,26 +357,37 @@ module ietf-arp-extension {
               <zhuyq8@chinatelecom.cn>
      Author:  Xiaojian Ding
               <wjswsl@163.com>";
+
   description
     "This YANG module extends Address Resolution Protocol (ARP)
      configuration and management defined in the ietf-ip, which 
      includes dynamic ARP learning, proxy ARP, gratuitous ARP, 
      and packet statistics collection.
 
-     Copyright (c) 2026 IETF Trust and the persons identified as
-     authors of the code.  All rights reserved.
+     Copyright (c) 2026 IETF Trust and the persons
+     identified as authors of the code.  All rights reserved.
 
      Redistribution and use in source and binary forms, with or
      without modification, is permitted pursuant to, and subject
-     to the license terms contained in, the Revised BSD License set
-     forth in Section 4.c of the IETF Trust's Legal Provisions
+     to the license terms contained in, the Revised BSD License
+     set forth in Section 4.c of the IETF Trust's Legal Provisions
      Relating to IETF Documents
      (https://trustee.ietf.org/license-info).
 
-     This version of this YANG module is part of RFC XXXX; see the
-     RFC itself for full legal notices.";
+     All revisions of IETF and IANA published modules can be found
+     at the YANG Parameters registry group
+     (https://www.iana.org/assignments/yang-parameters).
 
-  revision 2026-04-07 {
+     This version of this YANG module is part of RFC XXXX; see
+     the RFC itself for full legal notices.";
+
+  // RFC Ed: replace '2026-10-30' with the module publication date
+  // the format is (YYYY-MM-DD)
+
+  // replace XXXX with actual RFC number and remove
+  // this note
+
+  revision 2026-10-30 {
     description
       "Initial version.";
     reference
@@ -543,78 +555,90 @@ module ietf-arp-extension {
   }
 }
 ]]>          
-</sourcecode>
+      </sourcecode>
     </section>
 
     <section title="IANA Considerations">
-      <t>This document registers a URI in the <xref target="RFC3688">IETF XML
-          registry</xref>. Following the format in <xref target="RFC3688" />, the following
-        registration is requested to be made:</t>
+      <t>IANA is requested to register the following URI in the "ns" registry within the "IETF XML
+        Registry" group <xref target="RFC3688" />: </t>
 
       <artwork><![CDATA[
-    URI: urn:ietf:params:xml:ns:yang:ietf-arp-extension
-    Registrant Contact: The IESG.
-    XML: N/A, the requested URI is an XML namespace.
-      ]]></artwork>
+   URI: urn:ietf:params:xml:ns:yang:ietf-arp-extension
+   Registrant Contact:  The IESG
+   XML: N/A; the requested URI is an XML namespace.    
+              ]]></artwork>
 
-      <t>This document registers a YANG module in the YANG Module Names registry <xref
-          target="RFC6020" />.</t>
+      <t>IANA is requested to register the following YANG module in the "YANG Module Names" registry <xref
+          target="RFC6020" /> within the "YANG Parameters" registry group. </t>
 
       <artwork><![CDATA[
-    Name: ietf-arp-extension
-    Namespace: urn:ietf:params:xml:ns:yang:ietf-arp-extension
-    Prefix: arp-ext
-    Reference: RFC XXXX
-      ]]></artwork>
+   Name: ietf-arp-extension
+   Maintained by IANA?  N
+   Namespace: urn:ietf:params:xml:ns:yang:ietf-arp-extension
+   Prefix: arp-ext
+   Reference: RFC XXXX
+              ]]></artwork>
     </section>
 
     <section anchor="security" title="Security Considerations">
-      <t>The YANG module specified in this document defines a schema for data that is designed to be
-        accessed via network management protocols such as NETCONF <xref target="RFC6241" /> or
-        RESTCONF <xref target="RFC8040" /> . The lowest NETCONF layer is the secure transport layer,
-        and the mandatory-to-implement secure transport is Secure Shell (SSH) <xref
-          target="RFC6242" />. The lowest RESTCONF layer is HTTPS, and the mandatory-to-implement
-        secure transport is TLS <xref
-          target="RFC8446" />.</t>
+      <t>This section is modeled after the template described in Section 3.7.1 of <xref
+          target="RFC9907" />.</t>
 
-      <t>The NETCONF Access Control Model (NACM) <xref target="RFC8341" /> provides the means to
-        restrict access for particular NETCONF or RESTCONF users to a preconfigured subset of all
-        available NETCONF or RESTCONF protocol operations and content.</t>
+      <t>The "ietf-arp-extension" YANG module defines a data model that is designed to be accessed
+        via YANG-based management protocols, such as the Network Configuration Protocol (NETCONF) <xref
+          target="RFC6241" /> and RESTCONF <xref target="RFC8040" />. These YANG-based management
+        protocols (1) have to use a secure transport layer (e.g., Secure Shell (SSH) <xref
+          target="RFC4253" />, TLS <xref target="RFC9846" />, and QUIC <xref target="RFC9000" />)
+        and (2) have to use mutual authentication.</t>
 
+      <t>The Network Configuration Access Control Model (NACM) <xref target="RFC8341" /> provides
+        the means to restrict access for particular NETCONF or RESTCONF users to a preconfigured
+        subset of all available NETCONF or RESTCONF protocol operations and content.</t>
+
+      <!-- Writable nodes section -->
       <t>There are a number of data nodes defined in this YANG module that are
-        writable/creatable/deletable (i.e., config true, which is the default).
-        These data nodes may be considered sensitive or vulnerable in some
-        network environments. Write operations (e.g., edit-config) and delete
-        operations to these data nodes without proper protection or
-        authentication can have a negative effect on network operations.These
-        are the subtrees and data nodes and their sensitivity/vulnerability in
-        the "ietf-arp-extension" module:</t>
-
-      <!-- <t>* /arp-ext:arp/arp-ext:dynamic-learning</t>
-
-      <t>This leaf is used to enable ARP dynamic learning on all interfaces.
-        ARP dynamic learning could allow an attacker to inject spoofed traffic
-        into the network, e.g. denial-of-service attack.</t> -->
+        writable/creatable/deletable (i.e., "config true", which is the
+        default). All writable data nodes are likely to be sensitive or
+        vulnerable in some network environments. Write
+        operations (e.g., edit-config) and delete operations to these data
+        nodes without proper protection or authentication can have a negative
+        effect on network operations. The following subtrees and data nodes
+        have particular sensitivities/vulnerabilities:</t>
 
       <t>* /if:interfaces/if:interface/ip:ipv4/arp-ext:arp/arp-ext:dynamic-learning</t>
 
       <t>This leaf is used to enable ARP dynamic learning on a single
-        interface. ARP dynamic learning could allow an attacker to inject
+        interface. Unauthorized or mistaken changes to this leaf could allow an attacker to inject
         spoofed traffic into the network, e.g. denial-of-service attack.</t>
 
       <t>* /if:interfaces/if:interface/ip:ipv4/arp-ext:arp/arp-ext:proxy-arp</t>
 
-      <t>These leaves are used to enable proxy ARP on an interface. They could
-        allow traffic to be mis-configured (denial-of-service attack).</t>
+      <t>These leaves are used to enable proxy ARP on an interface.
+        Unauthorized or mistaken changes to this leaf could
+        cause traffic to be misdirected, potentially resulting in
+        denial of service. </t>
 
       <t>* /if:interfaces/if:interface/ip:ipv4/arp-ext:arp/arp-ext:gratuitous-arp</t>
 
       <t>These leaves are used to enable sending gratuitous ARP packet on an
-        interface. This configuration could allow an attacker to inject spoofed
-        traffic into the network, e.g. man-in-the-middle attack. The default
+        interface. Unauthorized or mistaken changes to this leaf could allow
+        an attacker to inject spoofed
+        traffic into the network, e.g. on-path attack. The default
         value for this data node is device specific, and hence users of this
         model MUST understand whether or not gratutious ARP is enabled and
         whether this could constitute a security risk.</t>
+
+      <!-- Readable nodes section: -->
+      <t>Some of the readable data nodes in this YANG module may be considered
+        sensitive or vulnerable in some network environments. It is thus
+        important to control read access (e.g., via get, get-config, or
+        notification) to these data nodes. Specifically, the following
+        subtrees and data nodes have particular sensitivities/
+        vulnerabilities:</t>
+
+      <t>* /if:interfaces/if:interface/ip:ipv4/arp-ext:arp/arp-ext:statistics</t>
+      <t>Unauthorized access to this subtree may disclose information about neighbor activity and
+        behavior patterns.</t>
     </section>
 
     <section anchor="ack" title="Acknowledgments">
@@ -625,32 +649,38 @@ module ietf-arp-extension {
   </middle>
 
   <back>
-    <references title="Normative References">
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.0826.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.1027.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3688.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5227.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.6020.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.6242.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7950.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8342.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8343.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8344.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8446.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.9911.xml" />
+    <references>
+      <name>References</name>
+      <references title="Normative References">
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.0826.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.1027.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3688.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5227.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.6020.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7950.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8342.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8343.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8344.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.9911.xml" />
+      </references>
+
+      <references title="Informative References">
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.4253.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.6241.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8014.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8040.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8340.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8341.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.9000.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.9568.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.9846.xml" />
+        <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.9907.xml" />
+      </references>
     </references>
 
-    <references title="Informative References">
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.6241.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8014.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8040.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8340.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8341.xml" />
-      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.9568.xml" />
-    </references>
-
+    <!-- appendix -->
     <section anchor="examples" title="Data Model Examples">
       <t>This section presents two ARP configuration examples using the ARP extension module,
         ietf-interfaces module <xref target="RFC8343" /> , and ietf-ip module <xref target="RFC8344" />
@@ -660,7 +690,7 @@ module ietf-arp-extension {
         <t>This example illustrates the configuration for a static ARP entry for peer 192.0.2.1 with
           MAC address 00:00:5E:00:53:AB.</t>
 
-        <sourcecode type="xml" markers="false"><![CDATA[ 
+        <sourcecode type="xml" markers="true"><![CDATA[ 
 <?xml version="1.0" encoding="utf-8"?>
 <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces"
   xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">
@@ -684,7 +714,7 @@ module ietf-arp-extension {
           time, proxy ARP in 'remote-only' mode, and enabling gratuitous ARP
           with an interval of 10 minutes.</t>
 
-        <sourcecode type="xml" markers="false"><![CDATA[
+        <sourcecode type="xml" markers="true"><![CDATA[
 <?xml version="1.0" encoding="utf-8"?>
 <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces"
   xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">
