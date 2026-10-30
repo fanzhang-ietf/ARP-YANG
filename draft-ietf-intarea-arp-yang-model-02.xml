@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<?xml-model href="rfc7991bis.rnc"?>
+<!DOCTYPE rfc [
+  <!ENTITY nbsp "&#160;">
+  <!ENTITY zwsp "&#8203;">
+  <!ENTITY nbhy "&#8209;">
+  <!ENTITY wj "&#8288;">
+]>
+
+<rfc
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  category="std"
+  docName="draft-ietf-intarea-arp-yang-model-01"
+  ipr="trust200902"
+  obsoletes=""
+  updates=""
+  submissionType="IETF"
+  consensus="true"
+  xml:lang="en"
+  version="3">
+
+  <front>
+    <title abbrev="ARP YANG model">A YANG Data Model for ARP Extensions</title>
+
+    <author fullname="Feng Zheng" initials="F" surname="Zheng">
+      <organization>Huawei</organization>
+
+      <address>
+        <postal>
+          <street>101 Software Avenue, Yuhua District</street>
+
+          <city>Nanjing</city>
+
+          <region>Jiangsu</region>
+
+          <code>210012</code>
+
+          <country>China</country>
+        </postal>
+
+        <email>habby.zheng@huawei.com</email>
+      </address>
+    </author>
+
+    <author fullname="Bo Wu" initials="B" role="editor" surname="Wu">
+      <organization>Huawei</organization>
+
+      <address>
+        <email>lana.wubo@huawei.com</email>
+      </address>
+    </author>
+
+    <author fullname="Robert Wilton" initials="R" role="editor"
+      surname="Wilton">
+      <organization>Cisco Systems</organization>
+
+      <address>
+        <email>rwilton@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Fan Zhang" initials="F" role="editor" surname="Zhang">
+      <organization>China Telecom</organization>
+      <address>
+        <email>zhangf52@chinatelecom.cn</email>
+      </address>
+    </author>
+
+    <author fullname="Yongqing Zhu" initials="Y." surname="Zhu">
+      <organization>China Telecom</organization>
+      <address>
+        <email>zhuyq8@chinatelecom.cn</email>
+      </address>
+    </author>
+
+    <author fullname="Xiaojian Ding" initials="X." surname="Ding">
+      <address>
+        <email>wjswsl@163.com</email>
+      </address>
+    </author>
+
+    <date year="2026" />
+
+    <!-- Meta-data Declarations -->
+
+    <area>Internet Area</area>
+
+    <workgroup>INTAREA</workgroup>
+
+
+    <abstract>
+      <t>This document defines a YANG data model for the management of the
+        Address Resolution Protocol (ARP). It extends the basic ARP
+        functionality contained in the ietf-ip YANG data model, defined in RFC
+        8344, to provide management of optional ARP features and statistics.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section anchor="intro" title="Introduction">
+      <t>Basic ARP functionality is supported by the ietf-ip YANG data model, defined in <xref
+          target="RFC8344" />. This document defines a YANG <xref
+          target="RFC7950" /> data model that extends the basic ARP YANG support to also cover
+        optional ARP features, and ARP-related statistics to aid network monitoring and
+        troubleshooting.</t>
+
+      <t>This model defines YANG configuration and operational state data nodes both for ARP related
+        functionality formally specified in other RFCs (such as <xref target="RFC8344" /> and <xref
+          target="RFC1027" />), and also for common ARP behaviour that is often supported on network
+        devices.</t>
+
+      <t>The YANG modules in this document conform to the Network Management Datastore Architecture
+        (NMDA) <xref target="RFC8342" />.</t>
+
+      <t>Editorial Note: (To be removed by RFC Editor)</t>
+
+      <t>This draft contains several placeholder values that need to be
+        replaced with finalized values at the time of publication. Please apply
+        the following replacements:</t>
+
+
+      <ul spacing="normal">
+        <li>"XXXX" --&gt; the assigned RFC value for this draft both in this
+          draft and in the YANG models under the revision statement.</li>
+
+        <li>The "revision" date in model, in the format XXXX-XX-XX, needs to
+          be updated with the date the draft gets approved. The date also
+          needs to get reflected on the line with &lt;CODE BEGINS&gt;.</li>
+      </ul>
+
+      <section title="Terminology">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD
+          NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
+          interpreted as described in BCP 14 <xref target="RFC2119" /> <xref target="RFC8174" />
+          when, and only when, they appear in all capitals, as shown here.</t>
+
+        <t>The following terms are defined in <xref target="RFC8342" /> and are not redefined here:</t>
+
+
+        <ul spacing="normal">
+          <li>client</li>
+
+          <li>server</li>
+
+          <li>configuration data</li>
+
+          <li>system state</li>
+
+          <li>state data</li>
+
+          <li>intended configuration</li>
+
+          <li>running configuration datastore</li>
+
+          <li>operational state datastore</li>
+        </ul>
+
+
+        <t>The following terms are defined in <xref target="RFC7950" /> and are not redefined here:</t>
+
+
+        <ul spacing="normal">
+          <li>augment</li>
+
+          <li>data model</li>
+
+          <li>data node</li>
+        </ul>
+
+
+        <t>The terminology for describing YANG data models is found in <xref
+            target="RFC7950" />.</t>
+      </section>
+
+      <section title="Tree Diagrams">
+        <t>Tree diagrams used in this document follow the notation defined in <xref target="RFC8340" />
+          .</t>
+      </section>
+    </section>
+
+    <!-- intro -->
+
+    <section anchor="problem" title="Problem Statement">
+      <t>Neither ARP <xref target="RFC0826" /> nor Proxy-ARP <xref
+          target="RFC1027" /> defines standard network management configuration models. Instead,
+        network equipment vendors have implemented their own bespoke configuration interfaces and
+        models.</t>
+
+      <t>Network operators benefit from having common network management
+        models defined that can be implemented by multiple network equipment
+        manufacturers. This simplifies the operation and management of network
+        devices.</t>
+
+      <t>Some, but not all, required ARP functionality has been defined in "ietf-ip" (<xref
+          target="RFC8344" />). Providing a standard YANG model that models these optional ARP
+        features, which are fairly widely implemented by network equipment manufacturers, and used
+        by network operators, is beneficial to the general goal of interoperability in the
+        networking industry.</t>
+
+      <!-- -->
+    </section>
+
+    <section anchor="design" title="Design of the Data Model">
+      <t>This data model intends to describe the processing that a protocol
+        finds the hardware address, also known as Media Access Control (MAC)
+        address, of a host from its known IP address. These tasks include, but
+        are not limited to, configuring dynamic ARP learning, proxy ARP, and
+        gratuitous ARP. </t>
+
+      <section title="ARP Dynamic Learning">
+        <t>As defined in <xref target="RFC0826" />, ARP caching is the method of storing network
+          addresses and the associated data-link addresses in memory for a period of time as the
+          addresses are learned. This minimizes the use of valuable network resources to broadcast
+          for the same address each time a datagram is sent.</t>
+
+        <t>There are static ARP cache entries and dynamic ARP cache entries. Static entries, are
+          manually configured and kept in the cache table on a permanent basis which are defined in
+          the ipv4 neighbor list for each interface in <xref target="RFC8344" />. Dynamic entries
+          are added by vendor software, kept for a period of time, and then removed. We can specify
+          how long an entry remains in the ARP cache. If we specify a timeout of 0 seconds, entries
+          are never cleared from the ARP cache.</t>
+
+        <t>The list of ARP cache entries and the configuration of static entries are already defined
+          in "ietf-ip" module <xref target="RFC8344" />, which models each neighbor entry by the
+          IPv4 address, link-layer address, and the origin of the entry (e.g., dynamic or static).
+          And this ARP module extends the ARP cache entries by adding the remaining lifetime for the
+          dynamic entries. Specifically, it augments the
+          "/if:interfaces/if:interface/ip:ipv4/ip:neighbor" list with a "remaining-expiry-time"
+          leaf. </t>
+      </section>
+
+      <section title="Proxy ARP">
+        <t>Proxy ARP, defined in <xref target="RFC1027" />, allows a router to respond to ARP
+          requests on behalf of another machine that is not on the same local subnet, offering its
+          own Ethernet media access control (MAC) address. By replying in such a way, the router
+          then takes responsibility for routing packets to the intended destination.</t>
+
+        <t>In the case of certain data center network virtualization, as specified in <xref
+            target="RFC8014" />, the proxy ARP can be extended to intercept all ARP requests,
+          including source and target IP addresses in different subnets, and those ARP requests in
+          the same subnet to suppress ARP handling.</t>
+
+        <t>The ARP module defined a "proxy-arp" container that augments "ietf-ip" module <xref
+            target="RFC8344" /> to support proxy ARP configuration on the interface. The container
+          includes a "mode" leaf to control whether proxy ARP are enabled for all requests, only for
+          targets in different subnets, or disabled. </t>
+      </section>
+
+      <section title="Gratuitous ARP">
+        <t>Gratuitous ARP enables a device to send an ARP Request packet using its own IP address as
+          the destination address. Gratuitous ARP provides the following functions:</t>
+        <ul spacing="normal">
+          <li>Checks duplicate IP addresses: <xref target="RFC5227" /> uses gratuitous ARP to help
+            detect IP conflicts. When a device receives an ARP request containing a source IP that
+            matches its own, then it knows there is an IP conflict.</li>
+
+          <li>Advertises a new MAC address: Also in <xref target="RFC5227" />, if the MAC address of
+            a host changes because its network adapter is replaced, the host sends a gratuitous ARP
+            packet to notify all hosts of the change before the ARP entry is aged out.</li>
+
+          <li>Notifies an active/standby switchover in a <xref
+              target="RFC9568" /> VRRP backup group: After an active/standby switchover, the master
+            router sends a gratuitous ARP packet in the VRRP backup group to notify the switchover.</li>
+        </ul>
+
+        <t>The ARP module defined a "gratuitous-arp" container that augments "ietf-ip" module <xref
+            target="RFC8344" /> to support gratuitous ARP configuration. The container includes an
+          "enable" leaf to control whether gratuitous ARP packets are sent on the interface, and an
+          "interval" leaf to specify the time between sending gratuitous ARP packets. </t>
+      </section>
+
+      <section title="ARP Data Model">
+        <t>This document defines the YANG module "ietf-arp-extension", which has the
+          following structure:</t>
+
+        <sourcecode type="yangtree" markers="false">
+<![CDATA[
+module: ietf-arp-extension
+
+  augment /if:interfaces/if:interface/ip:ipv4:
+    +--rw arp
+       +--rw expiry-time?        uint32
+       +--rw dynamic-learning?   boolean
+       +--rw proxy-arp
+       |  +--rw mode?   enumeration
+       +--rw gratuitous-arp
+       |  +--rw enabled?    boolean
+       |  +--rw interval?   uint32
+       +--ro statistics
+          +--ro in-requests-pkts?      yang:counter64
+          +--ro in-replies-pkts?       yang:counter64
+          +--ro in-gratuitous-pkts?    yang:counter64
+          +--ro out-requests-pkts?     yang:counter64
+          +--ro out-replies-pkts?      yang:counter64
+          +--ro out-gratuitous-pkts?   yang:counter64
+  augment /if:interfaces/if:interface/ip:ipv4/ip:neighbor:
+    +--ro remaining-expiry-time?   uint32
+        ]]>
+          </sourcecode>
+
+        <!-- <figure>
+          <artwork></artwork>
+        </figure> -->
+
+      </section>
+    </section>
+
+    <section anchor="yangmodel" title="ARP YANG Module">
+      <t>This section presents the ARP YANG module defined in this
+        document.</t>
+
+      <t>This module imports definitions from <xref target="RFC9911">Common
+          YANG Data Types</xref>, <xref target="RFC8343">A YANG Data Model for
+          Interface Management</xref>, and <xref target="RFC8344">A YANG Data
+          Model for IP Management</xref>.</t>
+
+      <sourcecode name="ietf-arp-extension@2026-04-07.yang" type="yang" markers="true">
+<![CDATA[
+module ietf-arp-extension {
+  yang-version 1.1;
+  namespace "urn:ietf:params:xml:ns:yang:ietf-arp-extension";
+  prefix arp-ext;
+
+  import ietf-yang-types {
+    prefix yang;
+    reference
+      "RFC 9911: Common YANG Data Types";
+  }
+  import ietf-interfaces {
+    prefix if;
+    reference
+      "RFC 8343: A Yang Data Model for Interface Management";
+  }
+  import ietf-ip {
+    prefix ip;
+    reference
+      "RFC 8344: A Yang Data Model for IP Management";
+  }
+
+  organization
+    "IETF Internet Area Working Group (intarea)";
+  contact
+    "WG Web:  <https://datatracker.ietf.org/wg/intarea/>
+     WG List: <mailto:int-area@ietf.org>
+
+     Author:  Feng Zheng
+              <habby.zheng@huawei.com>
+     Editor:  Bo Wu
+              <lana.wubo@huawei.com>
+     Editor:  Robert Wilton
+              <rwilton@cisco.com>
+     Editor:  Fan Zhang
+              <zhangf52@chinatelecom.cn>
+     Author:  Yongqing Zhu
+              <zhuyq8@chinatelecom.cn>
+     Author:  Xiaojian Ding
+              <wjswsl@163.com>";
+  description
+    "This YANG module extends Address Resolution Protocol (ARP)
+     configuration and management defined in the ietf-ip, which 
+     includes dynamic ARP learning, proxy ARP, gratuitous ARP, 
+     and packet statistics collection.
+
+     Copyright (c) 2026 IETF Trust and the persons identified as
+     authors of the code.  All rights reserved.
+
+     Redistribution and use in source and binary forms, with or
+     without modification, is permitted pursuant to, and subject
+     to the license terms contained in, the Revised BSD License set
+     forth in Section 4.c of the IETF Trust's Legal Provisions
+     Relating to IETF Documents
+     (https://trustee.ietf.org/license-info).
+
+     This version of this YANG module is part of RFC XXXX; see the
+     RFC itself for full legal notices.";
+
+  revision 2026-04-07 {
+    description
+      "Initial version.";
+    reference
+      "RFC XXXX: A YANG Data Model for ARP Extensions";
+  }
+
+  /* Data nodes */
+
+  augment "/if:interfaces/if:interface/ip:ipv4" {
+    description
+      "Augment interfaces with ARP configuration and state.";
+    container arp {
+      description
+        "Address Resolution Protocol (ARP) related configuration
+         and state";
+      leaf expiry-time {
+        type uint32 {
+          range "30..86400";
+        }
+        units "seconds";
+        description
+          "Aging time of a received dynamic ARP entry before it is
+           removed from the cache.";
+      }
+      leaf dynamic-learning {
+        type boolean;
+        default "true";
+        description
+          "Controls whether dynamic ARP learning is enabled on the
+           interface.
+
+             true -  dynamic learning is enabled
+             false - dynamic learning is disabled";
+      }
+      container proxy-arp {
+        description
+          "Configuration parameters for proxy ARP";
+        leaf mode {
+          type enumeration {
+            enum disabled {
+              description
+                "The system only responds to ARP requests that
+                 specify a target address configured on the local
+                 interface.";
+            }
+            enum remote-only {
+              description
+                "The system only responds to ARP requests when the
+                 sender and target IP addresses are in different
+                 subnets.";
+            }
+            enum all {
+              description
+                "The system responds to ARP requests where the sender
+                 and target IP addresses are in different subnets, as
+                 well as those where they are in the same subnet.";
+            }
+          }
+          default "disabled";
+          description
+            "When set to a value other than 'disabled', the local
+             system should respond to ARP requests that are for
+             target addresses other than those that are configured on
+             the local subinterface using its own MAC address as the
+             target hardware address.  If the 'remote-only' value is
+             specified, replies are only sent when the target address
+             falls outside the locally configured subnets on the
+             interface, whereas with the 'all' value, all requests,
+             regardless of their target address are replied to.";
+          reference
+            "RFC1027: Using ARP to Implement Transparent Subnet
+             Gateways";
+        }
+      }
+      container gratuitous-arp {
+        description
+          "Configure gratuitous ARP.";
+        reference
+          "RFC5227: IPv4 Address Conflict Detection";
+        leaf enabled {
+          type boolean;
+          description
+            "Enable or disable sending gratuitous ARP packet on the
+             interface.
+
+             The default behaviour is device specific, and a
+             deviation could be used to specify a device specific
+             default.";
+        }
+        leaf interval {
+          type uint32 {
+            range "1..86400";
+          }
+          units "seconds";
+          description
+            "The interval, in seconds, between sending gratuitous ARP
+             packets on the interface.
+
+             The default behaviour is device specific, and a
+             deviation could be used to specify a device specific
+             default.";
+        }
+      }
+      container statistics {
+        config false;
+        description
+          "ARP per-interface packet statistics
+
+           For all ARP interface counters, discontinuities in the
+           value can occur at re-initialization of the management
+           system and at other times as indicated by the value of
+           '../../statistics/discontinuity-time' in the
+           ietf-interfaces YANG module.";
+        leaf in-requests-pkts {
+          type yang:counter64;
+          description
+            "The number of ARP request packets received on this
+             interface.";
+        }
+        leaf in-replies-pkts {
+          type yang:counter64;
+          description
+            "The number of ARP reply packets received on this
+             interface.";
+        }
+        leaf in-gratuitous-pkts {
+          type yang:counter64;
+          description
+            "The number of gratuitous ARP packets received on this
+             interface.";
+        }
+        leaf out-requests-pkts {
+          type yang:counter64;
+          description
+            "The number of ARP request packets sent on this
+             interface.";
+        }
+        leaf out-replies-pkts {
+          type yang:counter64;
+          description
+            "The number of ARP reply packets sent on this
+             interface.";
+        }
+        leaf out-gratuitous-pkts {
+          type yang:counter64;
+          description
+            "The number of gratuitous ARP packets sent on this
+             interface.";
+        }
+      }
+    }
+  }
+
+  augment "/if:interfaces/if:interface/ip:ipv4/ip:neighbor" {
+    description
+      "Augment IPv4 neighbor list with ARP expiry time.";
+    leaf remaining-expiry-time {
+      type uint32;
+      units "seconds";
+      config false;
+      description
+        "The number of seconds until the dynamic ARP entry expires
+         and is removed from the ARP cache.";
+    }
+  }
+}
+]]>          
+</sourcecode>
+    </section>
+
+    <section title="IANA Considerations">
+      <t>This document registers a URI in the <xref target="RFC3688">IETF XML
+          registry</xref>. Following the format in <xref target="RFC3688" />, the following
+        registration is requested to be made:</t>
+
+      <artwork><![CDATA[
+    URI: urn:ietf:params:xml:ns:yang:ietf-arp-extension
+    Registrant Contact: The IESG.
+    XML: N/A, the requested URI is an XML namespace.
+      ]]></artwork>
+
+      <t>This document registers a YANG module in the YANG Module Names registry <xref
+          target="RFC6020" />.</t>
+
+      <artwork><![CDATA[
+    Name: ietf-arp-extension
+    Namespace: urn:ietf:params:xml:ns:yang:ietf-arp-extension
+    Prefix: arp-ext
+    Reference: RFC XXXX
+      ]]></artwork>
+    </section>
+
+    <section anchor="security" title="Security Considerations">
+      <t>The YANG module specified in this document defines a schema for data that is designed to be
+        accessed via network management protocols such as NETCONF <xref target="RFC6241" /> or
+        RESTCONF <xref target="RFC8040" /> . The lowest NETCONF layer is the secure transport layer,
+        and the mandatory-to-implement secure transport is Secure Shell (SSH) <xref
+          target="RFC6242" />. The lowest RESTCONF layer is HTTPS, and the mandatory-to-implement
+        secure transport is TLS <xref
+          target="RFC8446" />.</t>
+
+      <t>The NETCONF Access Control Model (NACM) <xref target="RFC8341" /> provides the means to
+        restrict access for particular NETCONF or RESTCONF users to a preconfigured subset of all
+        available NETCONF or RESTCONF protocol operations and content.</t>
+
+      <t>There are a number of data nodes defined in this YANG module that are
+        writable/creatable/deletable (i.e., config true, which is the default).
+        These data nodes may be considered sensitive or vulnerable in some
+        network environments. Write operations (e.g., edit-config) and delete
+        operations to these data nodes without proper protection or
+        authentication can have a negative effect on network operations.These
+        are the subtrees and data nodes and their sensitivity/vulnerability in
+        the "ietf-arp-extension" module:</t>
+
+      <!-- <t>* /arp-ext:arp/arp-ext:dynamic-learning</t>
+
+      <t>This leaf is used to enable ARP dynamic learning on all interfaces.
+        ARP dynamic learning could allow an attacker to inject spoofed traffic
+        into the network, e.g. denial-of-service attack.</t> -->
+
+      <t>* /if:interfaces/if:interface/ip:ipv4/arp-ext:arp/arp-ext:dynamic-learning</t>
+
+      <t>This leaf is used to enable ARP dynamic learning on a single
+        interface. ARP dynamic learning could allow an attacker to inject
+        spoofed traffic into the network, e.g. denial-of-service attack.</t>
+
+      <t>* /if:interfaces/if:interface/ip:ipv4/arp-ext:arp/arp-ext:proxy-arp</t>
+
+      <t>These leaves are used to enable proxy ARP on an interface. They could
+        allow traffic to be mis-configured (denial-of-service attack).</t>
+
+      <t>* /if:interfaces/if:interface/ip:ipv4/arp-ext:arp/arp-ext:gratuitous-arp</t>
+
+      <t>These leaves are used to enable sending gratuitous ARP packet on an
+        interface. This configuration could allow an attacker to inject spoofed
+        traffic into the network, e.g. man-in-the-middle attack. The default
+        value for this data node is device specific, and hence users of this
+        model MUST understand whether or not gratutious ARP is enabled and
+        whether this could constitute a security risk.</t>
+    </section>
+
+    <section anchor="ack" title="Acknowledgments">
+      <t>The authors wish to thank Alex Campbell, Reshad Rahman, Qin Wu, Tom
+        Petch, Jeffrey Haas, Xufeng Liu, and others for their helpful comments.</t>
+    </section>
+
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.0826.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.1027.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.3688.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.5227.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.6020.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.6242.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.7950.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8342.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8343.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8344.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8446.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.9911.xml" />
+    </references>
+
+    <references title="Informative References">
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.6241.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8014.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8040.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8340.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.8341.xml" />
+      <xi:include href="http://xml.resource.org/public/rfc/bibxml/reference.RFC.9568.xml" />
+    </references>
+
+    <section anchor="examples" title="Data Model Examples">
+      <t>This section presents two ARP configuration examples using the ARP extension module,
+        ietf-interfaces module <xref target="RFC8343" /> , and ietf-ip module <xref target="RFC8344" />
+        :</t>
+
+      <section title="Configuration of a Static ARP Entry">
+        <t>This example illustrates the configuration for a static ARP entry for peer 192.0.2.1 with
+          MAC address 00:00:5E:00:53:AB.</t>
+
+        <sourcecode type="xml" markers="false"><![CDATA[ 
+<?xml version="1.0" encoding="utf-8"?>
+<interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces"
+  xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">
+  <interface>
+    <name>eth0</name>
+    <type>ianaift:ethernetCsmacd</type>
+    <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
+      <neighbor>
+        <ip>192.0.2.1</ip>
+        <link-layer-address>00:00:5E:00:53:AB</link-layer-address>
+      </neighbor>
+    </ipv4>
+  </interface>
+</interfaces>
+]]>
+          </sourcecode>
+      </section>
+
+      <section title="Configuration of Proxy ARP and Gratuitous ARP">
+        <t>This example illustrates the configuration of ARP entry expiry
+          time, proxy ARP in 'remote-only' mode, and enabling gratuitous ARP
+          with an interval of 10 minutes.</t>
+
+        <sourcecode type="xml" markers="false"><![CDATA[
+<?xml version="1.0" encoding="utf-8"?>
+<interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces"
+  xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">
+  <interface>
+    <name>eth0</name>
+    <type>ianaift:ethernetCsmacd</type>
+    <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
+      <arp xmlns="urn:ietf:params:xml:ns:yang:ietf-arp-extension">
+        <expiry-time>1200</expiry-time>
+        <dynamic-learning>true</dynamic-learning>
+        <proxy-arp>
+          <mode>remote-only</mode>
+        </proxy-arp>
+        <gratuitous-arp>
+          <enabled>true</enabled>
+          <interval>600</interval>
+        </gratuitous-arp>
+      </arp>
+    </ipv4>
+  </interface>
+</interfaces>
+        ]]>
+          </sourcecode>
+      </section>
+    </section>
+
+  </back>
+</rfc>
